@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = ROOT / "site"
 PUBLIC_SITE = "https://dvoineu.github.io/Frazia/"
 PUBLIC_REPO = "https://github.com/dvoineu/VoiceHelper-downloads"
-RELEASE = PUBLIC_REPO + "/releases/download/v1.1-build.5/"
+RELEASE = PUBLIC_REPO + "/releases/download/v1.1-build.6/"
 
 
 class SemanticHTMLInspector(HTMLParser):
@@ -226,7 +226,7 @@ class FraziaSiteTests(unittest.TestCase):
         collector = I18nTextCollector()
         collector.feed((SITE_DIR / "index.html").read_text(encoding="utf-8"))
         for key, texts in collector.texts.items():
-            value = dictionary[key].replace("{version}", "1.1").replace("{build}", "5")
+            value = dictionary[key].replace("{version}", "1.1").replace("{build}", "6")
             expected = " ".join(value.replace("&amp;", "&").split())
             for text in texts:
                 self.assertEqual(text, expected, key)
@@ -263,8 +263,8 @@ class FraziaSiteTests(unittest.TestCase):
         inspector.feed(html)
         buttons = {a.get("data-i18n"): a for a in inspector.anchors}
         for key, filename in {
-            "dlBtnDmg": "Frazia-1.1-5-arm64.dmg",
-            "dlBtnZip": "Frazia-1.1-5-arm64.zip",
+            "dlBtnDmg": "Frazia-1.1-6-arm64.dmg",
+            "dlBtnZip": "Frazia-1.1-6-arm64.zip",
             "dlInstall": "INSTALL.txt",
             "dlChecksums": "SHA256SUMS",
         }.items():
@@ -334,9 +334,9 @@ class FraziaSiteTests(unittest.TestCase):
                     "newTrialTitle", "newTrialBody", "newModelTitle", "newModelBody", "newPreserved", "newFullNotes"]:
             self.assertIn('data-i18n="' + key + '"', html)
             self.assertEqual(len(re.findall(r'\b' + key + r':\s*[\'\"][^\'\"]+', dictionary)), 2, key)
-        self.assertIn(PUBLIC_REPO + "/releases/tag/v1.1-build.5", html)
+        self.assertIn(PUBLIC_REPO + "/releases/tag/v1.1-build.6", html)
         self.assertNotIn("v1.1-build.3", html)
-        self.assertIn('Frazia <span data-release="label">1.1 (5)</span>', html)
+        self.assertIn('Frazia <span data-release="label">1.1 (6)</span>', html)
 
 
 if __name__ == "__main__":

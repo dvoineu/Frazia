@@ -5,6 +5,18 @@ const PROJECT_TOKEN = 'phc_p7Qa9Q6PK4WoNhAgPx8S6gEJf655xJoMrV6VMpzjiEGc';
 const ID_KEY = 'frazia-analytics-id';
 const DOWNLOAD_KEY = 'frazia-analytics-download';
 
+// Never send the referrer URL, host, query or user-controlled campaign values.
+export function referrerCategory(referrer) {
+  if (!referrer) return 'unknown';
+  let host;
+  try { host = new URL(referrer).hostname.toLowerCase(); } catch { return 'unknown'; }
+  const matches = (domain) => host === domain || host.endsWith(`.${domain}`);
+  if (matches('google.com') || matches('bing.com') || matches('duckduckgo.com')) return 'search';
+  if (matches('github.com') || matches('github.io')) return 'github';
+  if (matches('youtube.com') || matches('youtu.be') || matches('t.me') || matches('telegram.org')) return 'social';
+  return 'other';
+}
+
 export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = false }) {
   let allowed = enabled;
 
@@ -54,8 +66,8 @@ export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = 
         try { storage.removeItem(ID_KEY); storage.removeItem(DOWNLOAD_KEY); } catch { /* storage unavailable */ }
       }
     },
-    visit(language) {
-      capture('site_visited', { language: language === 'ru' ? 'ru' : 'en' });
+    visit(language, referrer = '') {
+      capture('site_visited', { language: language === 'ru' ? 'ru' : 'en', referrer_category: referrerCategory(referrer) });
     },
     download(format, version, build) {
       if (!['dmg', 'zip'].includes(format) || !/^\d+(?:\.\d+)*$/.test(version) || !/^\d+$/.test(build)) return;
