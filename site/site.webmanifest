@@ -1,0 +1,27 @@
+{
+  "name": "Frazia — voice typing for Mac at your text cursor",
+  "short_name": "Frazia",
+  "description": "Free voice typing for Mac. Press Option-Space in any app, speak, and the text appears at your cursor. Offline Whisper recognition on Apple Silicon.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1F94FA",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "./assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
