@@ -216,7 +216,7 @@ document.addEventListener('visibilitychange', () => {
 /* ---------- Video guide: one video per language ---------- */
 
 const VIDEOS = {
-  en: { src: './media/frazia-guide-en.mp4', poster: './media/frazia-guide-en-poster.jpg', chapters: [0, 13, 28, 52, 62, 94, 126, 152, 165, 179] },
+  en: { src: './media/frazia-guide-en-dav-v4.mp4', poster: './media/frazia-guide-en-poster.jpg', chapters: [0, 13, 28, 52, 62, 94, 126, 152, 165, 179] },
   ru: { src: './media/frazia-guide-ru-dav-v4.mp4', poster: './media/frazia-guide-poster.jpg', chapters: [0, 12, 27, 54, 65, 98, 134, 159, 173, 187] },
 };
 

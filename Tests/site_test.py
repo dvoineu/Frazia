@@ -114,7 +114,7 @@ class FraziaSiteTests(unittest.TestCase):
             SITE_DIR / "vendor" / "LICENSE.txt",
             SITE_DIR / "media" / "frazia-guide-ru-dav-v4.mp4",
             SITE_DIR / "media" / "frazia-guide-poster.jpg",
-            SITE_DIR / "media" / "frazia-guide-en.mp4",
+            SITE_DIR / "media" / "frazia-guide-en-dav-v4.mp4",
             SITE_DIR / "media" / "frazia-guide-en-poster.jpg",
             SITE_DIR / "robots.txt",
             SITE_DIR / "sitemap.xml",
@@ -233,12 +233,12 @@ class FraziaSiteTests(unittest.TestCase):
 
     def test_video_guide_and_chapters(self):
         html = (SITE_DIR / "index.html").read_text(encoding="utf-8")
-        self.assertIn('src="./media/frazia-guide-en.mp4"', html)
+        self.assertIn('src="./media/frazia-guide-en-dav-v4.mp4"', html)
         self.assertIn('poster="./media/frazia-guide-en-poster.jpg"', html)
         seeks = [int(value) for value in re.findall(r'data-seek="(\d+)"', html)]
         self.assertEqual(len(seeks), 10)
         app_js = (SITE_DIR / "js" / "app.js").read_text(encoding="utf-8")
-        for lang, path, limit in [("en", "frazia-guide-en.mp4", 192), ("ru", "frazia-guide-ru-dav-v4.mp4", 201)]:
+        for lang, path, limit in [("en", "frazia-guide-en-dav-v4.mp4", 192), ("ru", "frazia-guide-ru-dav-v4.mp4", 201)]:
             self.assertIn(f"src: './media/{path}'", app_js)
             match = re.search(lang + r": \{[^}]*chapters: \[([\d, ]+)\]", app_js)
             self.assertIsNotNone(match, lang)
