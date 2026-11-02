@@ -3,6 +3,7 @@
 const ENDPOINT = 'https://eu.i.posthog.com/i/v0/e/';
 const PROJECT_TOKEN = 'phc_p7Qa9Q6PK4WoNhAgPx8S6gEJf655xJoMrV6VMpzjiEGc';
 const ID_KEY = 'frazia-analytics-id';
+const DOWNLOAD_KEY = 'frazia-analytics-download';
 
 export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = false }) {
   let allowed = enabled;
@@ -50,7 +51,7 @@ export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = 
     setEnabled(value) {
       allowed = value === true;
       if (!allowed) {
-        try { storage.removeItem(ID_KEY); } catch { /* storage unavailable */ }
+        try { storage.removeItem(ID_KEY); storage.removeItem(DOWNLOAD_KEY); } catch { /* storage unavailable */ }
       }
     },
     visit(language) {
@@ -58,6 +59,9 @@ export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = 
     },
     download(format, version, build) {
       if (!['dmg', 'zip'].includes(format) || !/^\d+(?:\.\d+)*$/.test(version) || !/^\d+$/.test(build)) return;
+      if (allowed) {
+        try { storage.setItem(DOWNLOAD_KEY, String(Date.now())); } catch { /* storage unavailable */ }
+      }
       capture('download_clicked', { format, release_version: `${version}-build.${build}` });
     },
   };
