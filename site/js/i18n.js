@@ -114,7 +114,7 @@ export const I18N = {
 
     videoKicker: 'Video guide',
     videoTitle: 'See the whole setup in 3 minutes',
-    videoSubtitle: 'Installation, permissions, model, shortcuts and voice commands. Subtitles are part of the video, so you can watch without sound.',
+    videoSubtitle: 'Installation, permissions, model, shortcuts and voice commands. Includes English narration and subtitles.',
     videoFallback: 'Your browser can’t play this video.',
     videoDownload: 'Download the video (MP4)',
     chaptersHeading: 'Chapters',

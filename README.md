@@ -2,7 +2,7 @@
 
 [Website](https://dvoineu.github.io/Frazia/) · [Русский](https://dvoineu.github.io/Frazia/?lang=ru) · [Downloads and release notes](https://github.com/dvoineu/VoiceHelper-downloads/releases)
 
-Free voice dictation at your text cursor. This repository contains the official bilingual website and video guides. The Russian guide includes DAV narration; the English guide has built-in subtitles.
+Free voice dictation at your text cursor. This repository contains the official bilingual website and video guides. Both guides include DAV narration and built-in subtitles.
 
 ## Maintaining the site
 
