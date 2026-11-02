@@ -178,6 +178,11 @@ export const I18N = {
     footerRepository: 'Downloads repository',
     footerIssues: 'Report a problem',
     footerTagline: 'Voice typing for Mac at your text cursor.',
+    analyticsSettings: 'Analytics choices',
+    analyticsTitle: 'Help improve Frazia',
+    analyticsDescription: 'Allow usage analytics to help us understand visits and downloads? You can change your choice at any time in the footer.',
+    analyticsAllow: 'Allow analytics',
+    analyticsDecline: 'Decline',
   },
 
   ru: {
@@ -349,6 +354,11 @@ export const I18N = {
     footerRepository: 'Репозиторий загрузок',
     footerIssues: 'Сообщить о проблеме',
     footerTagline: 'Голосовой ввод для Mac прямо у курсора.',
+    analyticsSettings: 'Настройки аналитики',
+    analyticsTitle: 'Помогите улучшить Frazia',
+    analyticsDescription: 'Разрешить аналитику посещений и скачиваний? Изменить выбор можно внизу страницы.',
+    analyticsAllow: 'Разрешить аналитику',
+    analyticsDecline: 'Отклонить',
   },
 };
 

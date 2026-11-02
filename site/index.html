@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Frazia — free voice typing for Mac at your text cursor</title>
   <meta name="description" content="Press ⌥ Option + Space in any Mac app, speak, and the text appears where you are typing. Free, offline recognition on Apple Silicon. Setup guide, shortcuts and video.">
@@ -508,9 +509,19 @@
         <a href="https://github.com/dvoineu/VoiceHelper-downloads" data-i18n="footerRepository">Downloads repository</a>
         <a href="https://github.com/dvoineu/VoiceHelper-downloads/issues" data-i18n="footerIssues">Report a problem</a>
         <a href="https://github.com/dvoineu/VoiceHelper-downloads/releases" data-i18n="dlVersions">All releases</a>
+        <button type="button" id="analytics-settings" data-i18n="analyticsSettings">Analytics choices</button>
       </nav>
     </div>
   </footer>
+
+  <section id="analytics-choice" class="analytics-choice" aria-labelledby="analytics-title" hidden>
+    <h2 id="analytics-title" data-i18n="analyticsTitle">Help improve Frazia</h2>
+    <p data-i18n="analyticsDescription">Allow usage analytics to help us understand visits and downloads? You can change your choice at any time in the footer.</p>
+    <div class="analytics-actions">
+      <button type="button" id="analytics-allow" data-i18n="analyticsAllow">Allow analytics</button>
+      <button type="button" id="analytics-decline" data-i18n="analyticsDecline">Decline</button>
+    </div>
+  </section>
 
   <script type="module" src="./js/app.js"></script>
 </body>
