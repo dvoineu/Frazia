@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Frazia — free voice typing for Mac at your text cursor</title>
+  <meta name="description" content="Press ⌥ Option + Space in any Mac app, speak, and the text appears where you are typing. Free, offline recognition on Apple Silicon. Setup guide, shortcuts and video.">
+  <meta name="author" content="Aliaksandr Dvoineu">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0e17" media="(prefers-color-scheme: dark)">
+
+  <link rel="canonical" href="https://dvoineu.github.io/Frazia/">
+  <link rel="alternate" hreflang="ru" href="https://dvoineu.github.io/Frazia/?lang=ru">
+  <link rel="alternate" hreflang="en" href="https://dvoineu.github.io/Frazia/?lang=en">
+  <link rel="alternate" hreflang="x-default" href="https://dvoineu.github.io/Frazia/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Frazia">
+  <meta property="og:title" content="Frazia — free voice typing for Mac at your text cursor">
+  <meta property="og:description" content="Press ⌥ Option + Space in any Mac app, speak, and the text appears where you are typing. Free and offline on Apple Silicon.">
+  <meta property="og:url" content="https://dvoineu.github.io/Frazia/">
+  <meta property="og:image" content="https://dvoineu.github.io/Frazia/media/frazia-guide-poster.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frazia — free voice typing for Mac at your text cursor">
+  <meta name="twitter:description" content="Press ⌥ Option + Space in any Mac app, speak, and the text appears where you are typing.">
+  <meta name="twitter:image" content="https://dvoineu.github.io/Frazia/media/frazia-guide-poster.jpg">
+
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="192x192" href="./assets/icon-192.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./css/styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://dvoineu.github.io/Frazia/#website",
+        "url": "https://dvoineu.github.io/Frazia/",
+        "name": "Frazia",
+        "description": "Voice typing for Mac at your text cursor.",
+        "inLanguage": ["en", "ru"]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://dvoineu.github.io/Frazia/#software",
+        "name": "Frazia",
+        "operatingSystem": "macOS 13.0+",
+        "applicationCategory": "UtilitiesApplication",
+        "softwareVersion": "1.1 (5)",
+        "identifier": "dev.voicehelper.VoiceHelper",
+        "url": "https://dvoineu.github.io/Frazia/",
+        "downloadUrl": "https://github.com/dvoineu/VoiceHelper-downloads/releases/download/v1.1-build.5/Frazia-1.1-5-arm64.dmg",
+        "description": "Free voice typing for macOS 13+ on Apple Silicon. Press Option-Space in any app, speak, and the text is inserted at the cursor. Offline Whisper recognition, optional Deepgram, OpenAI or Groq with your own API key.",
+        "featureList": [
+          "Option-Space shortcut: tap to start and stop, or hold while speaking",
+          "Text inserted at the cursor in any app without taking focus",
+          "Free offline Whisper recognition on Apple Silicon, up to Large v3 Turbo",
+          "Recommended model chosen from the Mac's chip and memory",
+          "Voice commands: new line, new paragraph, send it",
+          "Audio kept in memory only by default",
+          "14 dictation languages and Auto-detect"
+        ],
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" }
+      },
+      {
+        "@type": "VideoObject",
+        "@id": "https://dvoineu.github.io/Frazia/#video",
+        "name": "Frazia setup guide",
+        "description": "Install Frazia, allow permissions, choose a recognition model, set up the Option-Space shortcut and use voice commands.",
+        "thumbnailUrl": "https://dvoineu.github.io/Frazia/media/frazia-guide-en-poster.jpg",
+        "contentUrl": "https://dvoineu.github.io/Frazia/media/frazia-guide-en.mp4",
+        "uploadDate": "2026-11-02",
+        "duration": "PT3M12S",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "VideoObject",
+        "@id": "https://dvoineu.github.io/Frazia/#video-ru",
+        "name": "Frazia: видеоинструкция",
+        "description": "Установка Frazia, разрешения macOS, выбор модели распознавания, клавиши Option-Space и голосовые команды.",
+        "thumbnailUrl": "https://dvoineu.github.io/Frazia/media/frazia-guide-poster.jpg",
+        "contentUrl": "https://dvoineu.github.io/Frazia/media/frazia-guide-ru-dav-v4.mp4",
+        "uploadDate": "2026-11-01",
+        "duration": "PT3M21S",
+        "inLanguage": "ru"
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://dvoineu.github.io/Frazia/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "Is it really free? Do I need an account or an API key?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, it is free, and you need neither. The “On this Mac” engine works offline after you download a model. Cloud engines are optional and use your own API key." } },
+          { "@type": "Question", "name": "Why does Frazia need Accessibility?", "acceptedAnswer": { "@type": "Answer", "text": "macOS only lets an app find the text cursor and insert text into another app’s window through Accessibility. Without it you can still dictate and copy the text from History yourself." } },
+          { "@type": "Question", "name": "Which model should I choose?", "acceptedAnswer": { "@type": "Answer", "text": "The one with the “Recommended for your Mac” badge. On Apple Silicon with 16 GB of memory or more it is Large v3 Turbo, the most accurate. With less memory it is Small for Russian and other languages, or Base for English." } },
+          { "@type": "Question", "name": "Are my voice recordings saved?", "acceptedAnswer": { "@type": "Answer", "text": "Not by default. “Save dictations” is set to “Off — memory only”: audio stays in memory while it is being recognized and is then discarded. If you choose to keep recordings for 24 hours or 7 days, they are encrypted, and the key stays in your Mac’s Keychain." } },
+          { "@type": "Question", "name": "Can I use a cloud service instead?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, if you prefer. Deepgram shows text while you are still speaking; OpenAI and Groq recognize after you stop. You use your own API key, stored in the macOS Keychain, and the service may charge separately." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link" data-i18n="skipToContent">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#top" class="brand" aria-label="Frazia — home" data-i18n-aria-label="homeLabel">
+        <img src="./assets/icon-192.png" alt="" class="brand-icon" width="32" height="32">
+        <span>Frazia</span>
+      </a>
+      <nav class="primary-nav" aria-label="Main navigation" data-i18n-aria-label="navigationLabel">
+        <a href="#benefits" data-i18n="navBenefits">Why Frazia</a>
+        <a href="#start" data-i18n="navStart">Get started</a>
+        <a href="#shortcuts" data-i18n="navShortcuts">Shortcuts</a>
+        <a href="#video" data-i18n="navVideo">Video</a>
+        <a href="#faq" data-i18n="navFaq">FAQ</a>
+      </nav>
+      <div class="header-actions">
+        <div class="language-switch" role="group" aria-label="Website language" data-i18n-aria-label="languageLabel">
+          <a href="?lang=en" class="lang-switch" data-language="en" lang="en" hreflang="en" aria-current="true">EN</a>
+          <a href="?lang=ru" class="lang-switch" data-language="ru" lang="ru" hreflang="ru">RU</a>
+        </div>
+        <a href="#download" class="btn btn-primary btn-small" data-i18n="headerDownloadCta">Download</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- 1. Hero -->
+    <section id="top" class="hero">
+      <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="heroEyebrow">Free · macOS 13+ · Apple Silicon</p>
+          <h1>
+            <span data-i18n="heroTitlePrefix">Speak, and your text appears</span>
+            <span class="gradient-text" data-i18n="heroTitleHighlight">right at the cursor</span>
+          </h1>
+          <p class="lead" data-i18n-html="heroLead">Frazia is voice typing for your Mac. Press <kbd>⌥ Option</kbd> + <kbd>Space</kbd> in any app, speak normally, and the text is inserted where you were typing. Recognition runs on your Mac: free, private and offline.</p>
+          <div class="cta-row">
+            <a href="#download" class="btn btn-primary btn-large">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+              <span data-i18n="heroDownloadPrimary">Download for Mac</span>
+            </a>
+            <a href="#video" class="btn btn-secondary btn-large">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg>
+              <span data-i18n="heroWatchGuide">Watch the 3-minute guide</span>
+            </a>
+          </div>
+          <p class="hero-meta" data-i18n="heroMeta">Version 1.1 (5) · signed and notarized by Apple · English and Russian interface</p>
+        </div>
+
+        <figure class="demo" aria-label="Example: dictating a message with Frazia" data-i18n-aria-label="demoLabel">
+          <div class="stage-anchor" id="stage-anchor" aria-hidden="true"></div>
+          <div class="demo-window" aria-hidden="true">
+            <div class="demo-titlebar">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="demo-title" data-i18n="demoWindowTitle">Messages — Anna</span>
+            </div>
+            <div class="demo-body">
+              <div class="bubble bubble-in">👋</div>
+              <div class="demo-field">
+                <span id="demo-text"></span><span class="caret"></span>
+                <div class="hud" id="demo-hud" data-state="listening">
+                  <span class="hud-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                  <span class="hud-status" id="demo-status" data-i18n="demoListening">Listening…</span>
+                  <span class="hud-timer" id="demo-timer">0:03</span>
+                  <span class="hud-key">⌥ Space</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 2. Benefits -->
+    <section id="benefits" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker" data-i18n="benefitsKicker">Why Frazia</p>
+          <h2 data-i18n="benefitsTitle">Type at the speed of speech, in every app</h2>
+          <p class="section-sub" data-i18n="benefitsSubtitle">Speaking is several times faster than typing. Frazia lets you do it wherever you write.</p>
+        </div>
+        <ul class="benefits-grid">
+          <li class="card benefit">
+            <span class="benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M18 14v6"/></svg></span>
+            <h3 data-i18n="benefit1Title">Works in any app</h3>
+            <p data-i18n="benefit1Body">Messengers, mail, browsers, Notes, VS Code, Terminal. Text goes where your cursor is, and the window you are typing in stays active.</p>
+          </li>
+          <li class="card benefit">
+            <span class="benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="2"/><path d="M9 20h6M12 16v4"/><path d="m3 3 18 18"/></svg></span>
+            <h3 data-i18n="benefit2Title">Free and offline</h3>
+            <p data-i18n="benefit2Body">Whisper recognition runs on your Mac’s graphics chip. No account, no subscription and no internet after the model is downloaded.</p>
+          </li>
+          <li class="card benefit">
+            <span class="benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+            <h3 data-i18n="benefit3Title">Private by default</h3>
+            <p data-i18n="benefit3Body">Audio is kept in memory only while it is being recognized, then discarded. Saving recordings in History is up to you.</p>
+          </li>
+          <li class="card benefit">
+            <span class="benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.5 2.5 2.5 13.5 0 16M12 4c-2.5 2.5-2.5 13.5 0 16"/></svg></span>
+            <h3 data-i18n="benefit4Title">Accurate in 14 languages</h3>
+            <p data-i18n="benefit4Body">The Large v3 Turbo model handles fast speech, terms and names. Choose a language or leave Auto-detect on.</p>
+          </li>
+          <li class="card benefit">
+            <span class="benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <h3 data-i18n="benefit5Title">Never types into the wrong place</h3>
+            <p data-i18n="benefit5Body">If you switch windows or a password field becomes active, Frazia doesn’t insert and keeps your text ready to paste.</p>
+          </li>
+          <li class="card benefit">
+            <span class="benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></span>
+            <h3 data-i18n="benefit6Title">Voice commands</h3>
+            <p data-i18n="benefit6Body">Say “new line” or “new paragraph” to format, or end with “send it” to insert the text and press Return.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3. Get started -->
+    <section id="start" class="section section-soft">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker" data-i18n="startKicker">Get started</p>
+          <h2 data-i18n="startTitle">Set up in four steps</h2>
+          <p class="section-sub" data-i18n="startSubtitle">About five minutes, most of it the model download. On first launch, a setup window walks you through the same steps.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <div class="step-text">
+              <h3 data-i18n="step1Title">Install the app</h3>
+              <p data-i18n-html="step1Body">Download the DMG, open it and drag <strong>Frazia</strong> into <strong>Applications</strong>. Launch it: the Frazia icon appears in the menu bar at the top of the screen and the setup window opens.</p>
+              <p class="note" data-i18n="step1Note">Needs a Mac with Apple Silicon (M1 or later) and macOS 13 Ventura or later.</p>
+            </div>
+            <div class="step-visual install-visual" aria-hidden="true">
+              <img src="./assets/icon-192.png" alt="" width="64" height="64" loading="lazy">
+              <svg class="install-arrow" viewBox="0 0 60 24"><path d="M2 12h52m-8-8 8 8-8 8"/></svg>
+              <span class="folder"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg><span data-i18n="folderApplications">Applications</span></span>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-text">
+              <h3 data-i18n="step2Title">Allow two permissions</h3>
+              <p data-i18n-html="step2Body">macOS asks for access once. Click <strong>Allow</strong>, then turn on the switch next to Frazia in System Settings → Privacy &amp; Security.</p>
+              <p class="note" data-i18n-html="step2Note">Then check the microphone: in <strong>Microphone</strong> keep <strong>Auto</strong> and say a few words. The level bar should reach the green zone.</p>
+            </div>
+            <div class="step-visual">
+              <ul class="perm-list">
+                <li>
+                  <span class="perm-icon mic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></span>
+                  <span class="perm-text"><strong data-i18n="perm1Title">Microphone</strong><span data-i18n="perm1Body">To hear your speech.</span></span>
+                  <span class="perm-ok" data-i18n="permGranted">Allowed</span>
+                </li>
+                <li>
+                  <span class="perm-icon ax" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6"/><path d="M5 9h14M12 9v5m0 0-3 6m3-6 3 6"/></svg></span>
+                  <span class="perm-text"><strong data-i18n="perm2Title">Accessibility</strong><span data-i18n="perm2Body">To insert text where the cursor is.</span></span>
+                  <span class="perm-ok" data-i18n="permGranted">Allowed</span>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-text">
+              <h3 data-i18n="step3Title">Choose the recommended model</h3>
+              <p data-i18n-html="step3Body">In <strong>Recognition</strong> keep the engine <strong>On this Mac</strong> and pick your dictation language. Download the model marked <strong>Recommended for your Mac</strong>: Frazia chooses it from your chip and memory.</p>
+              <p class="note" data-i18n="step3Note">Medium and Tiny are also available. You can change the model at any time in Settings → Recognition; downloaded models are kept when you update.</p>
+            </div>
+            <div class="step-visual">
+              <table class="model-table">
+                <caption data-i18n="modelTableCaption">Which model Frazia recommends</caption>
+                <thead>
+                  <tr>
+                    <th scope="col" data-i18n="modelColMac">Your Mac</th>
+                    <th scope="col" data-i18n="modelColModel">Model</th>
+                    <th scope="col" data-i18n="modelColSize">Download</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="is-best">
+                    <td data-i18n="modelRow1Mac">Apple Silicon with 16 GB of memory or more</td>
+                    <td><strong>Large v3 Turbo</strong> <span class="badge" data-i18n="modelRecommended">Best</span><span class="model-note" data-i18n="modelRow1Note">highest accuracy for complex speech</span></td>
+                    <td class="num" data-i18n="modelRow1Size">1.6 GB</td>
+                  </tr>
+                  <tr>
+                    <td data-i18n="modelRow2Mac">Less than 16 GB, Russian or other languages</td>
+                    <td><strong>Small</strong><span class="model-note" data-i18n="modelRow2Note">balanced for Russian and multilingual speech</span></td>
+                    <td class="num" data-i18n="modelRow2Size">466 MB</td>
+                  </tr>
+                  <tr>
+                    <td data-i18n="modelRow3Mac">Less than 16 GB, English</td>
+                    <td><strong>Base</strong><span class="model-note" data-i18n="modelRow3Note">fast and light for English</span></td>
+                    <td class="num" data-i18n="modelRow3Size">142 MB</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+
+          <li class="step">
+            <div class="step-text">
+              <h3 data-i18n="step4Title">Press ⌥ Space and speak</h3>
+              <p data-i18n-html="step4Body">Put the cursor in any text field and press <kbd>⌥ Option</kbd> + <kbd>Space</kbd>. A small recording window with a wave and a timer appears next to the cursor. Speak, then press <kbd>⌥ Space</kbd> again: the text is inserted.</p>
+              <p class="note" data-i18n-html="step4Note">Setup ends with a trial field, so you can check everything before using other apps. To change the shortcut, open Settings → <strong>Shortcuts</strong>, click <strong>Change</strong> and press the new combination.</p>
+            </div>
+            <div class="step-visual keys-visual" aria-hidden="true">
+              <span class="keycap keycap-xl">⌥<small>option</small></span>
+              <span class="plus">+</span>
+              <span class="keycap keycap-xl keycap-wide">space</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 4. Shortcuts cheat sheet -->
+    <section id="shortcuts" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker" data-i18n="shortcutsKicker">Cheat sheet</p>
+          <h2 data-i18n="shortcutsTitle">Shortcuts and voice commands</h2>
+          <p class="section-sub" data-i18n="shortcutsSubtitle">The default mode is “Tap or hold”: one shortcut works two ways.</p>
+        </div>
+        <div class="cheat-grid">
+          <div class="card cheat">
+            <h3 data-i18n="keysHeading">Keys</h3>
+            <dl class="cheat-list">
+              <div><dt data-i18n-html="key1Keys">Tap <kbd>⌥ Space</kbd></dt><dd data-i18n="key1Action">Start recording; tap again to stop and insert</dd></div>
+              <div><dt data-i18n-html="key2Keys">Hold <kbd>⌥ Space</kbd></dt><dd data-i18n="key2Action">Record while held; release to insert</dd></div>
+              <div><dt data-i18n-html="key3Keys"><kbd>⇧ Shift</kbd> + stop</dt><dd data-i18n="key3Action">Insert and press Return, so a message is sent right away</dd></div>
+              <div><dt><kbd>⌥ ⇧ V</kbd></dt><dd data-i18n="key4Action">Paste the last dictation again</dd></div>
+              <div><dt><kbd>Esc</kbd></dt><dd data-i18n="key5Action">Cancel the recording</dd></div>
+            </dl>
+          </div>
+          <div class="card cheat">
+            <h3 data-i18n="commandsHeading">Voice commands</h3>
+            <dl class="cheat-list">
+              <div><dt class="say" data-i18n="cmd1Say">“new line”</dt><dd data-i18n="cmd1Does">Line break</dd></div>
+              <div><dt class="say" data-i18n="cmd2Say">“new paragraph”</dt><dd data-i18n="cmd2Does">Empty line between paragraphs</dd></div>
+              <div><dt class="say" data-i18n="cmd3Say">“send it” at the end</dt><dd data-i18n="cmd3Does">Insert and press Return</dd></div>
+            </dl>
+            <p class="note" data-i18n="commandsNote">Commands work in English and Russian and only as a separate phrase, so “add a new line to the table” stays plain text. You can turn them off in Settings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Video guide -->
+    <section id="video" class="section section-soft">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker" data-i18n="videoKicker">Video guide</p>
+          <h2 data-i18n="videoTitle">See the whole setup in 3 minutes</h2>
+          <p class="section-sub" data-i18n="videoSubtitle">Installation, permissions, model, shortcuts and voice commands. Subtitles are part of the video, so you can watch without sound.</p>
+        </div>
+        <div class="video-layout">
+          <div class="video-frame">
+            <video id="guide-video" controls playsinline preload="none" poster="./media/frazia-guide-en-poster.jpg" width="1920" height="1080">
+              <source src="./media/frazia-guide-en.mp4" type="video/mp4">
+              <p><span data-i18n="videoFallback">Your browser can’t play this video.</span> <a href="./media/frazia-guide-en.mp4" data-video-link data-i18n="videoDownload">Download the video (MP4)</a></p>
+            </video>
+          </div>
+          <nav class="chapters" aria-labelledby="chapters-heading">
+            <h3 id="chapters-heading" data-i18n="chaptersHeading">Chapters</h3>
+            <ol>
+              <li><button type="button" data-seek="0"><span class="time">0:00</span><span data-i18n="chapter1">What Frazia is</span></button></li>
+              <li><button type="button" data-seek="13"><span class="time">0:13</span><span data-i18n="chapter2">Installation</span></button></li>
+              <li><button type="button" data-seek="28"><span class="time">0:28</span><span data-i18n="chapter3">macOS permissions</span></button></li>
+              <li><button type="button" data-seek="52"><span class="time">0:52</span><span data-i18n="chapter4">Microphone check</span></button></li>
+              <li><button type="button" data-seek="62"><span class="time">1:02</span><span data-i18n="chapter5">Choosing a model</span></button></li>
+              <li><button type="button" data-seek="94"><span class="time">1:34</span><span data-i18n="chapter6">Shortcuts (⌥ Space)</span></button></li>
+              <li><button type="button" data-seek="126"><span class="time">2:06</span><span data-i18n="chapter7">Dictation in action</span></button></li>
+              <li><button type="button" data-seek="152"><span class="time">2:32</span><span data-i18n="chapter8">Voice commands</span></button></li>
+              <li><button type="button" data-seek="165"><span class="time">2:45</span><span data-i18n="chapter9">Menu and History</span></button></li>
+              <li><button type="button" data-seek="179"><span class="time">2:59</span><span data-i18n="chapter10">Cheat sheet</span></button></li>
+            </ol>
+            <a class="text-link" href="./media/frazia-guide-en.mp4" download data-video-link data-i18n="videoDownload">Download the video (MP4)</a>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. What's new -->
+    <section id="whats-new" class="section" aria-labelledby="whats-new-title">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker" data-i18n="newKicker">Latest release · 1.1 (5)</p>
+          <h2 id="whats-new-title" data-i18n="newTitle">What’s new in Frazia</h2>
+          <p class="section-sub" data-i18n="newSubtitle">VoiceHelper is now Frazia. Here’s how to update.</p>
+        </div>
+        <ul class="news-grid">
+          <li class="card">
+            <h3 data-i18n="newSetupTitle">Quit the old app</h3>
+            <p data-i18n="newSetupBody">Choose Quit VoiceHelper in the menu bar. Move VoiceHelper.app from Applications to the Trash so only one copy handles your dictation shortcut.</p>
+          </li>
+          <li class="card">
+            <h3 data-i18n="newTrialTitle">Install Frazia</h3>
+            <p data-i18n="newTrialBody">Drag Frazia.app into Applications and open it there.</p>
+          </li>
+          <li class="card">
+            <h3 data-i18n="newModelTitle">Continue dictating</h3>
+            <p data-i18n="newModelBody">Frazia uses your existing shortcut, downloaded models, saved dictations and API keys.</p>
+          </li>
+        </ul>
+        <p class="news-foot">
+          <span data-i18n="newPreserved">If macOS asks for access again, allow Frazia to use the microphone and Accessibility in System Settings.</span>
+          <a class="text-link" href="https://github.com/dvoineu/VoiceHelper-downloads/releases/tag/v1.1-build.5" data-i18n="newFullNotes">Read the full changelog and release notes →</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- 7. Download -->
+    <section id="download" class="section section-soft">
+      <div class="container">
+        <div class="download-card">
+          <div class="download-main">
+            <img src="./assets/icon-192.png" alt="Frazia app icon" width="80" height="80" loading="lazy" class="download-icon">
+            <p class="kicker" data-i18n="dlKicker">Apple Silicon · macOS 13 Ventura or later</p>
+            <h2 data-i18n="dlTitle">Install Frazia on your Mac</h2>
+            <p data-i18n="dlDesc">Frazia 1.1 (build 5) for Macs with Apple Silicon (M1 or later). The app is Developer ID signed and Apple notarized. Choose the DMG installer or ZIP archive.</p>
+            <div class="cta-row">
+              <a href="https://github.com/dvoineu/VoiceHelper-downloads/releases/download/v1.1-build.5/Frazia-1.1-5-arm64.dmg" class="btn btn-primary btn-large" data-release="dmg" data-i18n="dlBtnDmg">Download Frazia 1.1 (DMG)</a>
+              <a href="https://github.com/dvoineu/VoiceHelper-downloads/releases/download/v1.1-build.5/Frazia-1.1-5-arm64.zip" class="btn btn-secondary btn-large" data-release="zip" data-i18n="dlBtnZip">Download App Archive (ZIP)</a>
+            </div>
+            <p class="download-links">
+              <a href="https://github.com/dvoineu/VoiceHelper-downloads/releases/download/v1.1-build.5/INSTALL.txt" data-release="install" data-i18n="dlInstall">Installation instructions</a>
+              <a href="https://github.com/dvoineu/VoiceHelper-downloads/releases/download/v1.1-build.5/SHA256SUMS" data-release="checksums" data-i18n="dlChecksums">SHA-256 checksums</a>
+              <a href="https://github.com/dvoineu/VoiceHelper-downloads/releases" data-i18n="dlVersions">All releases</a>
+            </p>
+          </div>
+          <div class="download-steps">
+            <h3 data-i18n="dlChecklistTitle">After downloading</h3>
+            <ol>
+              <li data-i18n="dlStep1">If upgrading from VoiceHelper, quit it and remove the old app from Applications. Open the DMG and drag Frazia.app into Applications.</li>
+              <li data-i18n="dlStep2">Launch Frazia and allow Microphone and Accessibility.</li>
+              <li data-i18n="dlStep3">Download the recommended model in Recognition.</li>
+              <li data-i18n="dlStep4">Try a phrase in the setup field, then dictate anywhere with ⌥ Space.</li>
+            </ol>
+            <p class="note" data-i18n="dlUpdate">Updating? Quit Frazia and replace the app in Applications. Settings, API keys and models are kept.</p>
+            <p class="version-line">Frazia <span data-release="label">1.1 (5)</span> · Apple Silicon (arm64) · macOS 13+</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. FAQ -->
+    <section id="faq" class="section">
+      <div class="container narrow">
+        <div class="section-head">
+          <p class="kicker" data-i18n="faqKicker">Questions</p>
+          <h2 data-i18n="faqTitle">Frequently asked questions</h2>
+        </div>
+        <div class="faq-list">
+          <details name="faq" class="faq-item" open>
+            <summary data-i18n="faqQ1">Is it really free? Do I need an account or an API key?</summary>
+            <p data-i18n="faqA1">Yes, it is free, and you need neither. The “On this Mac” engine works offline after you download a model. Cloud engines are optional and use your own API key.</p>
+          </details>
+          <details name="faq" class="faq-item">
+            <summary data-i18n="faqQ2">Why does Frazia need Accessibility?</summary>
+            <p data-i18n="faqA2">macOS only lets an app find the text cursor and insert text into another app’s window through Accessibility. Without it you can still dictate and copy the text from History yourself.</p>
+          </details>
+          <details name="faq" class="faq-item">
+            <summary data-i18n="faqQ3">The text didn’t appear after dictation. What should I do?</summary>
+            <p data-i18n="faqA3">First check that Frazia is turned on in System Settings → Privacy &amp; Security → Accessibility. If you switched windows or a password field was active, Frazia deliberately doesn’t insert: press ⌥ Shift V to paste the last dictation, or copy it from History in the menu bar.</p>
+          </details>
+          <details name="faq" class="faq-item">
+            <summary data-i18n="faqQ4">Which model should I choose?</summary>
+            <p data-i18n="faqA4">The one with the “Recommended for your Mac” badge. On Apple Silicon with 16 GB of memory or more it is Large v3 Turbo, the most accurate. With less memory it is Small for Russian and other languages, or Base for English.</p>
+          </details>
+          <details name="faq" class="faq-item">
+            <summary data-i18n="faqQ5">Are my voice recordings saved?</summary>
+            <p data-i18n="faqA5">Not by default. “Save dictations” is set to “Off — memory only”: audio stays in memory while it is being recognized and is then discarded. If you choose to keep recordings for 24 hours or 7 days, they are encrypted, and the key stays in your Mac’s Keychain.</p>
+          </details>
+          <details name="faq" class="faq-item">
+            <summary data-i18n="faqQ6">Can I use a cloud service instead?</summary>
+            <p data-i18n="faqA6">Yes, if you prefer. Deepgram shows text while you are still speaking; OpenAI and Groq recognize after you stop. You use your own API key, stored in the macOS Keychain, and the service may charge separately.</p>
+          </details>
+          <details name="faq" class="faq-item">
+            <summary data-i18n="faqQ7">How is it different from the built-in macOS Dictation?</summary>
+            <p data-i18n="faqA7">Frazia runs open Whisper models up to Large v3 Turbo on your Mac in 14 languages, shows its window next to the cursor without taking focus, understands voice commands and sending with Shift, and lets you switch to a cloud engine at any time.</p>
+          </details>
+          <details name="faq" class="faq-item">
+            <summary data-i18n="faqQ8">How do I update or remove Frazia?</summary>
+            <p data-i18n="faqA8">To update, quit Frazia and replace the app in Applications with the new version: settings, API keys and models are kept. There is no automatic updater yet. To remove it, quit the app and move it to the Trash.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="./assets/icon-192.png" alt="" width="28" height="28" loading="lazy">
+        <span><strong>Frazia</strong> · <span data-i18n="footerTagline">Voice typing for Mac at your text cursor.</span></span>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="https://github.com/dvoineu/VoiceHelper-downloads" data-i18n="footerRepository">Downloads repository</a>
+        <a href="https://github.com/dvoineu/VoiceHelper-downloads/issues" data-i18n="footerIssues">Report a problem</a>
+        <a href="https://github.com/dvoineu/VoiceHelper-downloads/releases" data-i18n="dlVersions">All releases</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
