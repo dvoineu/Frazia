@@ -460,3 +460,22 @@ kbd {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .hud-wave i { height: 55%; }
 }
+
+.analytics-choice {
+  position: fixed;
+  z-index: 1000;
+  right: 16px;
+  bottom: 16px;
+  max-width: 420px;
+  padding: 20px;
+  border: 1px solid #aaa;
+  border-radius: 14px;
+  background: #fff;
+  color: #171717;
+  box-shadow: 0 8px 28px #0003;
+}
+.analytics-choice[hidden] { display: none; }
+.analytics-choice h2 { font-size: 18px; margin: 0 0 8px; }
+.analytics-choice p { margin: 0 0 12px; }
+.analytics-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.analytics-actions button, #analytics-settings { cursor: pointer; }

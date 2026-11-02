@@ -1,4 +1,5 @@
 import { I18N, SUPPORTED_LANGUAGES } from './i18n.js';
+import { createAnalytics } from './analytics.mjs';
 
 const STORAGE_KEY = 'voicehelper-language';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -31,6 +32,43 @@ function detectInitialLanguage() {
 
 let currentLanguage = 'en';
 
+const ANALYTICS_CHOICE_KEY = 'frazia-analytics-choice';
+
+function setupAnalytics() {
+  const choice = document.getElementById('analytics-choice');
+  const settings = document.getElementById('analytics-settings');
+  if (!choice || !settings) return;
+  // Preview and test hosts must never send production analytics.
+  if (location.origin !== 'https://dvoineu.github.io' || !location.pathname.startsWith('/Frazia/')) {
+    settings.hidden = true;
+    return;
+  }
+  let storage;
+  try { storage = window.localStorage; } catch { settings.hidden = true; return; }
+  let stored;
+  try { stored = storage.getItem(ANALYTICS_CHOICE_KEY); } catch { settings.hidden = true; return; }
+  const analytics = createAnalytics({
+    storage, crypto: window.crypto,
+    sendBeacon: navigator.sendBeacon?.bind(navigator), fetch: window.fetch.bind(window),
+    enabled: stored === 'allow',
+  });
+  if (stored === 'allow') analytics.visit(currentLanguage, document.referrer);
+  choice.hidden = stored === 'allow' || stored === 'decline';
+  settings.addEventListener('click', () => { choice.hidden = false; });
+  function decide(allow) {
+    try { storage.setItem(ANALYTICS_CHOICE_KEY, allow ? 'allow' : 'decline'); }
+    catch { analytics.setEnabled(false); choice.hidden = true; return; }
+    analytics.setEnabled(allow);
+    choice.hidden = true;
+    if (allow) analytics.visit(currentLanguage, document.referrer);
+  }
+  document.getElementById('analytics-allow')?.addEventListener('click', () => decide(true));
+  document.getElementById('analytics-decline')?.addEventListener('click', () => decide(false));
+  document.querySelectorAll('[data-release="dmg"], [data-release="zip"]').forEach((link) => {
+    link.addEventListener('click', () => analytics.download(link.dataset.release, release.version, release.build));
+  });
+}
+
 /* ---------- Latest release ----------
  * The HTML links point at a known release, so downloads work without
  * JavaScript. On load the page asks GitHub for the latest published
@@ -40,7 +78,7 @@ let currentLanguage = 'en';
 
 const REPO = 'dvoineu/VoiceHelper-downloads';
 const RELEASE_CACHE_KEY = 'frazia-latest-release';
-const release = { version: '1.1', build: '5' };
+const release = { version: '1.1', build: '6' };
 
 function fill(value) {
   return value.replaceAll('{version}', release.version).replaceAll('{build}', release.build);
@@ -316,4 +354,5 @@ setupLanguageSwitch();
 setupChapters();
 setupActiveNav();
 applyLanguage(detectInitialLanguage());
+setupAnalytics();
 loadLatestRelease();

@@ -129,7 +129,7 @@ export const I18N = {
     chapter9: 'Menu and History',
     chapter10: 'Cheat sheet',
 
-    newKicker: 'Latest release · 1.1 (5)',
+    newKicker: 'Latest release · 1.1 (6)',
     newTitle: 'What’s new in Frazia',
     newSubtitle: 'VoiceHelper is now Frazia. Here’s how to update.',
     newSetupTitle: 'Quit the old app',
@@ -178,6 +178,11 @@ export const I18N = {
     footerRepository: 'Downloads repository',
     footerIssues: 'Report a problem',
     footerTagline: 'Voice typing for Mac at your text cursor.',
+    analyticsSettings: 'Analytics choices',
+    analyticsTitle: 'Help improve Frazia',
+    analyticsDescription: 'Allow analytics for site visits and clicks on download links? You can change your choice at any time in the footer.',
+    analyticsAllow: 'Allow analytics',
+    analyticsDecline: 'Decline',
   },
 
   ru: {
@@ -300,7 +305,7 @@ export const I18N = {
     chapter9: 'Меню и История',
     chapter10: 'Шпаргалка',
 
-    newKicker: 'Новая версия · 1.1 (5)',
+    newKicker: 'Новая версия · 1.1 (6)',
     newTitle: 'Что нового в Frazia',
     newSubtitle: 'VoiceHelper теперь называется Frazia. Вот как обновиться.',
     newSetupTitle: 'Завершите старую версию',
@@ -349,6 +354,11 @@ export const I18N = {
     footerRepository: 'Репозиторий загрузок',
     footerIssues: 'Сообщить о проблеме',
     footerTagline: 'Голосовой ввод для Mac прямо у курсора.',
+    analyticsSettings: 'Настройки аналитики',
+    analyticsTitle: 'Помогите улучшить Frazia',
+    analyticsDescription: 'Разрешить аналитику посещений сайта и нажатий на ссылки скачивания? Изменить выбор можно внизу страницы.',
+    analyticsAllow: 'Разрешить аналитику',
+    analyticsDecline: 'Отклонить',
   },
 };
 
