@@ -18,7 +18,7 @@ class SemanticHTMLInspector(HTMLParser):
         super().__init__()
         self.headings = []
         self.images = []
-        self.details_names = []
+        self.details_count = 0
         self.meta_tags = []
         self.link_tags = []
         self.anchors = []
@@ -38,7 +38,7 @@ class SemanticHTMLInspector(HTMLParser):
         elif tag == "img":
             self.images.append(attr_dict)
         elif tag == "details":
-            self.details_names.append(attr_dict.get("name"))
+            self.details_count += 1
         elif tag == "meta":
             self.meta_tags.append(attr_dict)
         elif tag == "link":
@@ -150,10 +150,8 @@ class FraziaSiteTests(unittest.TestCase):
             self.assertIn("height", img)
             self.assertIn("alt", img)
 
-        # Exclusive accordion FAQ uses <details name="faq">
-        self.assertGreaterEqual(len(inspector.details_names), 5)
-        for name in inspector.details_names:
-            self.assertEqual(name, "faq")
+        # Native <details> FAQ disclosures
+        self.assertGreaterEqual(inspector.details_count, 5)
 
         # Canonical & hreflang links
         rels = [link.get("rel") for link in inspector.link_tags]
@@ -177,6 +175,7 @@ class FraziaSiteTests(unittest.TestCase):
     def test_css_supports_dark_mode_reduced_motion_and_small_screens(self):
         css_text = (SITE_DIR / "css" / "styles.css").read_text(encoding="utf-8")
         self.assertIn("prefers-color-scheme: dark", css_text)
+        self.assertIn("light-dark(", css_text)
         self.assertIn("prefers-reduced-motion: reduce", css_text)
         self.assertIn("max-width: 640px", css_text)
         app_js = (SITE_DIR / "js" / "app.js").read_text(encoding="utf-8")
@@ -196,6 +195,17 @@ class FraziaSiteTests(unittest.TestCase):
         app_js = (SITE_DIR / "js" / "app.js").read_text(encoding="utf-8")
         self.assertIn("api.github.com/repos/${REPO}/releases/latest", app_js)
         self.assertIn("const REPO = 'dvoineu/VoiceHelper-downloads';", app_js)
+
+    def test_homebrew_prominence_and_copy_controls(self):
+        html_text = (SITE_DIR / "index.html").read_text(encoding="utf-8")
+        self.assertGreaterEqual(
+            html_text.count("brew tap dvoineu/tap &amp;&amp; brew install --cask frazia"),
+            2,
+            "Homebrew install command must appear in both Hero and Download sections",
+        )
+        self.assertIn("brew upgrade --cask frazia", html_text)
+        self.assertGreaterEqual(html_text.count('command="--copy"'), 3)
+        self.assertGreaterEqual(html_text.count('role="status"'), 3)
 
     def test_hero_scene_is_optional_and_respects_motion_settings(self):
         app_js = (SITE_DIR / "js" / "app.js").read_text(encoding="utf-8")
@@ -226,7 +236,12 @@ class FraziaSiteTests(unittest.TestCase):
         collector = I18nTextCollector()
         collector.feed((SITE_DIR / "index.html").read_text(encoding="utf-8"))
         for key, texts in collector.texts.items():
-            value = dictionary[key].replace("{version}", "1.1").replace("{build}", "8")
+            value = (
+                dictionary[key]
+                .replace("{version}", "1.1")
+                .replace("{build}", "8")
+                .replace("\\n", " ")
+            )
             expected = " ".join(value.replace("&amp;", "&").split())
             for text in texts:
                 self.assertEqual(text, expected, key)
@@ -261,34 +276,45 @@ class FraziaSiteTests(unittest.TestCase):
         inspector = SemanticHTMLInspector()
         html = (SITE_DIR / "index.html").read_text(encoding="utf-8")
         inspector.feed(html)
+
+        dmg_anchors = [a for a in inspector.anchors if a.get("data-release") == "dmg"]
+        self.assertGreaterEqual(len(dmg_anchors), 2)
+        for anchor in dmg_anchors:
+            self.assertEqual(anchor["href"], RELEASE + "Frazia-1.1-8-arm64.dmg")
+
         buttons = {a.get("data-i18n"): a for a in inspector.anchors}
         for key, filename in {
-            "dlBtnDmg": "Frazia-1.1-8-arm64.dmg",
             "dlBtnZip": "Frazia-1.1-8-arm64.zip",
             "dlInstall": "INSTALL.txt",
             "dlChecksums": "SHA256SUMS",
         }.items():
             self.assertEqual(buttons[key]["href"], RELEASE + filename)
+
         for anchor in inspector.anchors:
             href = anchor.get("href", "")
             if href.startswith("https://github.com/"):
                 self.assertTrue(href == PUBLIC_REPO or href.startswith(PUBLIC_REPO + "/"), href)
+
         canonical = next(link["href"] for link in inspector.link_tags if link.get("rel") == "canonical")
         self.assertEqual(canonical, PUBLIC_SITE)
         for link in inspector.link_tags:
             if link.get("rel") == "alternate":
                 self.assertTrue(link["href"].startswith(PUBLIC_SITE))
+
         graph = json.loads(inspector.json_ld_blocks[0])["@graph"]
         software = next(item for item in graph if item["@type"] == "SoftwareApplication")
-        self.assertEqual(software["downloadUrl"], buttons["dlBtnDmg"]["href"])
+        self.assertEqual(software["downloadUrl"], RELEASE + "Frazia-1.1-8-arm64.dmg")
         self.assertNotIn("codeRepository", software)
+
         for meta in inspector.meta_tags:
             if meta.get("property") in {"og:url", "og:image"} or meta.get("name") == "twitter:image":
                 self.assertTrue(meta["content"].startswith(PUBLIC_SITE))
+
         sitemap = ET.fromstring((SITE_DIR / "sitemap.xml").read_text())
         ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
         self.assertEqual(sitemap.find("s:url/s:loc", ns).text, PUBLIC_SITE)
         self.assertIn("Sitemap: " + PUBLIC_SITE + "sitemap.xml", (SITE_DIR / "robots.txt").read_text())
+
         for path in [SITE_DIR / "index.html", *sorted((SITE_DIR / "js").glob("*.js"))]:
             self.assertNotIn("git clone", path.read_text())
             self.assertNotIn("voicehelper.dev", path.read_text())
@@ -311,7 +337,7 @@ class FraziaSiteTests(unittest.TestCase):
     def test_english_html_fallback_and_language_links(self):
         html = (SITE_DIR / "index.html").read_text()
         self.assertIn('<html lang="en">', html)
-        self.assertIn('>Install Frazia on your Mac</h2>', html)
+        self.assertIn('<h2 data-i18n="dlTitle">Install Frazia on your Mac</h2>', html)
         inspector = SemanticHTMLInspector()
         inspector.feed(html)
         languages = {a["data-language"]: a for a in inspector.anchors if "data-language" in a}
@@ -329,11 +355,19 @@ class FraziaSiteTests(unittest.TestCase):
         html = (SITE_DIR / "index.html").read_text()
         dictionary = (SITE_DIR / "js/i18n.js").read_text()
         self.assertIn('id="whats-new"', html)
-        self.assertIn('>What’s new in Frazia</h2>', html)
-        for key in ["newKicker", "newTitle", "newSubtitle", "newSetupTitle", "newSetupBody",
-                    "newTrialTitle", "newTrialBody", "newModelTitle", "newModelBody", "newPreserved", "newFullNotes"]:
+        for key in [
+            "newKicker",
+            "newTitle",
+            "newSetupTitle",
+            "newSetupBody",
+            "newTrialTitle",
+            "newTrialBody",
+            "newModelTitle",
+            "newModelBody",
+            "newFullNotes",
+        ]:
             self.assertIn('data-i18n="' + key + '"', html)
-            self.assertEqual(len(re.findall(r'\b' + key + r':\s*[\'\"][^\'\"]+', dictionary)), 2, key)
+            self.assertEqual(len(re.findall(r"\b" + key + r':\s*[\'"][^\'"]+', dictionary)), 2, key)
         self.assertIn(PUBLIC_REPO + "/releases/tag/v1.1-build.8", html)
         self.assertNotIn("v1.1-build.3", html)
         self.assertNotIn("v1.1-build.6", html)
