@@ -78,10 +78,20 @@ function setupAnalytics() {
 
 const REPO = 'dvoineu/VoiceHelper-downloads';
 const RELEASE_CACHE_KEY = 'frazia-latest-release';
-const release = { version: '1.1', build: '6' };
+const release = { version: '1.1', build: '8' };
 
 function fill(value) {
   return value.replaceAll('{version}', release.version).replaceAll('{build}', release.build);
+}
+
+function compareRelease(a, b) {
+  const av = String(a?.version || '').split('.').map(Number);
+  const bv = String(b?.version || '').split('.').map(Number);
+  for (let i = 0; i < Math.max(av.length, bv.length); i += 1) {
+    const diff = (av[i] || 0) - (bv[i] || 0);
+    if (diff !== 0) return diff;
+  }
+  return Number(a?.build || 0) - Number(b?.build || 0);
 }
 
 function parseRelease(data) {
@@ -97,6 +107,9 @@ function parseRelease(data) {
     checksums: asset('SHA256SUMS'),
   };
   if (!Object.values(links).every(Boolean)) return null;
+  if (typeof data.html_url === 'string' && data.html_url.startsWith(`https://github.com/${REPO}/releases/tag/`)) {
+    links.notes = data.html_url;
+  }
   return { version, build, links };
 }
 
@@ -119,7 +132,7 @@ function applyRelease(info) {
 async function loadLatestRelease() {
   try {
     const cached = JSON.parse(sessionStorage.getItem(RELEASE_CACHE_KEY) || 'null');
-    if (cached && Date.now() - cached.at < 3600 * 1000) {
+    if (cached && Date.now() - cached.at < 3600 * 1000 && compareRelease(cached.info, release) >= 0) {
       applyRelease(cached.info);
       return;
     }
@@ -129,6 +142,7 @@ async function loadLatestRelease() {
     const timer = window.setTimeout(() => controller.abort(), 5000);
     const response = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
       headers: { Accept: 'application/vnd.github+json' },
+      priority: 'low',
       signal: controller.signal,
     });
     window.clearTimeout(timer);
