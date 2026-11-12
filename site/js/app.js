@@ -1,11 +1,12 @@
 import { I18N, SUPPORTED_LANGUAGES } from './i18n.js';
 import { createAnalytics } from './analytics.mjs';
+import { RELEASE_CACHE_TTL_MS, parseRelease, shouldAcceptRelease } from './release.mjs';
 
 const STORAGE_KEY = 'voicehelper-language';
 const ANALYTICS_CHOICE_KEY = 'frazia-analytics-choice';
 const REPO = 'dvoineu/VoiceHelper-downloads';
 const RELEASE_CACHE_KEY = 'frazia-latest-release';
-const release = { version: '1.1', build: '8' };
+const release = { version: '1.1', build: '9' };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 let currentLanguage = 'en';
@@ -98,41 +99,12 @@ function setupAnalytics() {
 
 /* ---------- Latest GitHub Release ---------- */
 
-function compareRelease(a, b) {
-  const av = String(a?.version || '').split('.').map(Number);
-  const bv = String(b?.version || '').split('.').map(Number);
-  for (let i = 0; i < Math.max(av.length, bv.length); i += 1) {
-    const diff = (av[i] || 0) - (bv[i] || 0);
-    if (diff !== 0) return diff;
-  }
-  return Number(a?.build || 0) - Number(b?.build || 0);
-}
-
-function parseRelease(data) {
-  const match = /^v(\d+(?:\.\d+)*)-build\.(\d+)$/.exec(data.tag_name || '');
-  if (!match || !Array.isArray(data.assets)) return null;
-  const [, version, build] = match;
-  const stem = `Frazia-${version}-${build}-arm64`;
-  const asset = (name) => data.assets.find((entry) => entry.name === name)?.browser_download_url;
-  const links = {
-    dmg: asset(`${stem}.dmg`),
-    zip: asset(`${stem}.zip`),
-    install: asset('INSTALL.txt'),
-    checksums: asset('SHA256SUMS'),
-  };
-  if (!Object.values(links).every(Boolean)) return null;
-  if (typeof data.html_url === 'string' && data.html_url.startsWith(`https://github.com/${REPO}/releases/tag/`)) {
-    links.notes = data.html_url;
-  }
-  return { version, build, links };
-}
+let lastReleaseCheckAt = 0;
 
 function applyRelease(info) {
-  if (!info) return;
-  if (info.version && info.build) {
-    release.version = info.version;
-    release.build = info.build;
-  }
+  if (!shouldAcceptRelease(info, release)) return false;
+  release.version = info.version;
+  release.build = info.build;
   Object.entries(info.links).forEach(([kind, url]) => {
     if (!url) return;
     document.querySelectorAll(`[data-release="${kind}"]`).forEach((a) => { a.href = url; });
@@ -140,29 +112,48 @@ function applyRelease(info) {
   document.querySelectorAll('[data-release="label"]').forEach((el) => {
     el.textContent = `${release.version} (${release.build})`;
   });
+  const ldScript = document.querySelector('script[type="application/ld+json"]');
+  if (ldScript?.textContent) {
+    try {
+      const ld = JSON.parse(ldScript.textContent);
+      const sw = ld['@graph']?.find((item) => item['@type'] === 'SoftwareApplication');
+      if (sw) {
+        sw.softwareVersion = `${release.version} (${release.build})`;
+        if (info.links.dmg) sw.downloadUrl = info.links.dmg;
+        ldScript.textContent = JSON.stringify(ld);
+      }
+    } catch { /* keep static structured data */ }
+  }
   applyLanguage(currentLanguage);
+  return true;
 }
 
 async function loadLatestRelease() {
+  const now = Date.now();
   try {
     const cached = JSON.parse(sessionStorage.getItem(RELEASE_CACHE_KEY) || 'null');
-    if (cached && Date.now() - cached.at < 3600 * 1000 && compareRelease(cached.info, release) >= 0) {
+    if (cached && shouldAcceptRelease(cached.info, release)) {
       applyRelease(cached.info);
-      return;
+      if (now - Number(cached.at || 0) < RELEASE_CACHE_TTL_MS) {
+        lastReleaseCheckAt = Number(cached.at || now);
+        return;
+      }
     }
   } catch { /* no storage */ }
+  lastReleaseCheckAt = now;
   try {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 5000);
     const response = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
       headers: { Accept: 'application/vnd.github+json' },
+      cache: 'no-cache',
       priority: 'low',
       signal: controller.signal,
     });
     window.clearTimeout(timer);
     if (!response.ok) return;
-    const info = parseRelease(await response.json());
-    if (!info) return;
+    const info = parseRelease(await response.json(), REPO);
+    if (!shouldAcceptRelease(info, release)) return;
     try { sessionStorage.setItem(RELEASE_CACHE_KEY, JSON.stringify({ at: Date.now(), info })); } catch { /* no storage */ }
     applyRelease(info);
   } catch {
@@ -620,6 +611,11 @@ setupActiveNav();
 applyLanguage(detectInitialLanguage());
 setupAnalytics();
 loadLatestRelease();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && Date.now() - lastReleaseCheckAt >= RELEASE_CACHE_TTL_MS) {
+    loadLatestRelease();
+  }
+});
 
 const whenIdle = window.requestIdleCallback || ((fn) => window.setTimeout(fn, 200));
 if (document.readyState === 'complete') whenIdle(loadHeroScene);

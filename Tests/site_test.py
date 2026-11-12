@@ -1,4 +1,5 @@
 import json
+import plistlib
 import re
 import unittest
 import xml.etree.ElementTree as ET
@@ -10,7 +11,9 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = ROOT / "site"
 PUBLIC_SITE = "https://dvoineu.github.io/Frazia/"
 PUBLIC_REPO = "https://github.com/dvoineu/VoiceHelper-downloads"
-RELEASE = PUBLIC_REPO + "/releases/download/v1.1-build.8/"
+VERSION = "1.1"
+BUILD = "9"
+RELEASE = f"{PUBLIC_REPO}/releases/download/v{VERSION}-build.{BUILD}/"
 
 
 class SemanticHTMLInspector(HTMLParser):
@@ -109,6 +112,7 @@ class FraziaSiteTests(unittest.TestCase):
             SITE_DIR / "css" / "styles.css",
             SITE_DIR / "js" / "app.js",
             SITE_DIR / "js" / "i18n.js",
+            SITE_DIR / "js" / "release.mjs",
             SITE_DIR / "js" / "scene3d.js",
             SITE_DIR / "vendor" / "three.module.min.js",
             SITE_DIR / "vendor" / "LICENSE.txt",
@@ -195,6 +199,16 @@ class FraziaSiteTests(unittest.TestCase):
         app_js = (SITE_DIR / "js" / "app.js").read_text(encoding="utf-8")
         self.assertIn("api.github.com/repos/${REPO}/releases/latest", app_js)
         self.assertIn("const REPO = 'dvoineu/VoiceHelper-downloads';", app_js)
+        self.assertIn("cache: 'no-cache'", app_js)
+        self.assertIn("shouldAcceptRelease(info, release)", app_js)
+        self.assertIn(f"const release = {{ version: '{VERSION}', build: '{BUILD}' }};", app_js)
+        release_mjs = (SITE_DIR / "js" / "release.mjs").read_text(encoding="utf-8")
+        self.assertIn("export function shouldAcceptRelease", release_mjs)
+        info_plist = ROOT / "Resources" / "Info.plist"
+        if info_plist.is_file():
+            plist = plistlib.loads(info_plist.read_bytes())
+            self.assertEqual(plist["CFBundleShortVersionString"], VERSION)
+            self.assertEqual(plist["CFBundleVersion"], BUILD)
 
     def test_homebrew_prominence_and_copy_controls(self):
         html_text = (SITE_DIR / "index.html").read_text(encoding="utf-8")
@@ -238,8 +252,8 @@ class FraziaSiteTests(unittest.TestCase):
         for key, texts in collector.texts.items():
             value = (
                 dictionary[key]
-                .replace("{version}", "1.1")
-                .replace("{build}", "8")
+                .replace("{version}", VERSION)
+                .replace("{build}", BUILD)
                 .replace("\\n", " ")
             )
             expected = " ".join(value.replace("&amp;", "&").split())
@@ -280,11 +294,11 @@ class FraziaSiteTests(unittest.TestCase):
         dmg_anchors = [a for a in inspector.anchors if a.get("data-release") == "dmg"]
         self.assertGreaterEqual(len(dmg_anchors), 2)
         for anchor in dmg_anchors:
-            self.assertEqual(anchor["href"], RELEASE + "Frazia-1.1-8-arm64.dmg")
+            self.assertEqual(anchor["href"], RELEASE + f"Frazia-{VERSION}-{BUILD}-arm64.dmg")
 
         buttons = {a.get("data-i18n"): a for a in inspector.anchors}
         for key, filename in {
-            "dlBtnZip": "Frazia-1.1-8-arm64.zip",
+            "dlBtnZip": f"Frazia-{VERSION}-{BUILD}-arm64.zip",
             "dlInstall": "INSTALL.txt",
             "dlChecksums": "SHA256SUMS",
         }.items():
@@ -303,7 +317,8 @@ class FraziaSiteTests(unittest.TestCase):
 
         graph = json.loads(inspector.json_ld_blocks[0])["@graph"]
         software = next(item for item in graph if item["@type"] == "SoftwareApplication")
-        self.assertEqual(software["downloadUrl"], RELEASE + "Frazia-1.1-8-arm64.dmg")
+        self.assertEqual(software["softwareVersion"], f"{VERSION} ({BUILD})")
+        self.assertEqual(software["downloadUrl"], RELEASE + f"Frazia-{VERSION}-{BUILD}-arm64.dmg")
         self.assertNotIn("codeRepository", software)
 
         for meta in inspector.meta_tags:
@@ -368,10 +383,11 @@ class FraziaSiteTests(unittest.TestCase):
         ]:
             self.assertIn('data-i18n="' + key + '"', html)
             self.assertEqual(len(re.findall(r"\b" + key + r':\s*[\'"][^\'"]+', dictionary)), 2, key)
-        self.assertIn(PUBLIC_REPO + "/releases/tag/v1.1-build.8", html)
+        self.assertIn(f"{PUBLIC_REPO}/releases/tag/v{VERSION}-build.{BUILD}", html)
         self.assertNotIn("v1.1-build.3", html)
         self.assertNotIn("v1.1-build.6", html)
-        self.assertIn('Frazia <span data-release="label">1.1 (8)</span>', html)
+        self.assertNotIn("v1.1-build.8", html)
+        self.assertIn(f'Frazia <span data-release="label">{VERSION} ({BUILD})</span>', html)
 
 
 if __name__ == "__main__":
