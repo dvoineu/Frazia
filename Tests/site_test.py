@@ -12,7 +12,7 @@ SITE_DIR = ROOT / "site"
 PUBLIC_SITE = "https://dvoineu.github.io/Frazia/"
 PUBLIC_REPO = "https://github.com/dvoineu/VoiceHelper-downloads"
 VERSION = "1.1"
-BUILD = "9"
+BUILD = "10"
 RELEASE = f"{PUBLIC_REPO}/releases/download/v{VERSION}-build.{BUILD}/"
 
 
