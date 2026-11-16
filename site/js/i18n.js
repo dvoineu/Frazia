@@ -236,11 +236,7 @@ export const I18N = {
     footerRepository: 'Downloads repository',
     footerIssues: 'Report an issue',
     footerTagline: 'Offline voice typing for Mac at your cursor.',
-    analyticsSettings: 'Analytics choices',
-    analyticsTitle: 'Anonymous download & visit stats',
-    analyticsDescription: 'Help improve Frazia by allowing cookie-free visit and download click counts? Change anytime in the footer.',
-    analyticsAllow: 'Allow',
-    analyticsDecline: 'Not now',
+    analyticsDescription: 'Frazia automatically sends visit and download-click statistics to PostHog.',
   },
 
   ru: {
@@ -472,11 +468,7 @@ export const I18N = {
     footerRepository: 'Репозиторий загрузок',
     footerIssues: 'Сообщить о проблеме',
     footerTagline: 'Офлайн голосовой ввод для Mac прямо у курсора.',
-    analyticsSettings: 'Настройки аналитики',
-    analyticsTitle: 'Анонимная статистика скачиваний',
-    analyticsDescription: 'Разрешить подсчёт визитов и кликов по скачиванию без cookie? Изменить решение можно в подвале сайта.',
-    analyticsAllow: 'Разрешить',
-    analyticsDecline: 'Не сейчас',
+    analyticsDescription: 'Frazia автоматически отправляет в PostHog статистику посещений и нажатий на ссылки скачивания.',
   },
 };
 

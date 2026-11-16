@@ -3,7 +3,6 @@ import { createAnalytics } from './analytics.mjs';
 import { RELEASE_CACHE_TTL_MS, parseRelease, shouldAcceptRelease } from './release.mjs';
 
 const STORAGE_KEY = 'voicehelper-language';
-const ANALYTICS_CHOICE_KEY = 'frazia-analytics-choice';
 const REPO = 'dvoineu/VoiceHelper-downloads';
 const RELEASE_CACHE_KEY = 'frazia-latest-release';
 const release = { version: '1.1', build: '9' };
@@ -54,44 +53,19 @@ function fill(value) {
   return value.replaceAll('{version}', release.version).replaceAll('{build}', release.build);
 }
 
-/* ---------- Opt-in Analytics ---------- */
+/* ---------- Production Analytics ---------- */
 
 function setupAnalytics() {
-  const choice = document.getElementById('analytics-choice');
-  const settings = document.getElementById('analytics-settings');
-  if (!choice || !settings) return;
-  if (location.origin !== 'https://dvoineu.github.io' || !location.pathname.startsWith('/Frazia/')) {
-    settings.hidden = true;
-    return;
-  }
+  if (location.origin !== 'https://dvoineu.github.io' || !location.pathname.startsWith('/Frazia/')) return;
   let storage;
-  try { storage = window.localStorage; } catch { settings.hidden = true; return; }
-  let stored;
-  try { stored = storage.getItem(ANALYTICS_CHOICE_KEY); } catch { settings.hidden = true; return; }
+  try { storage = window.localStorage; } catch { return; }
   const analytics = createAnalytics({
     storage,
     crypto: window.crypto,
     sendBeacon: navigator.sendBeacon?.bind(navigator),
     fetch: window.fetch.bind(window),
-    enabled: stored === 'allow',
   });
-  if (stored === 'allow') analytics.visit(currentLanguage, document.referrer);
-  choice.hidden = stored === 'allow' || stored === 'decline';
-  settings.addEventListener('click', () => { choice.hidden = false; });
-
-  function decide(allow) {
-    try { storage.setItem(ANALYTICS_CHOICE_KEY, allow ? 'allow' : 'decline'); } catch {
-      analytics.setEnabled(false);
-      choice.hidden = true;
-      return;
-    }
-    analytics.setEnabled(allow);
-    choice.hidden = true;
-    if (allow) analytics.visit(currentLanguage, document.referrer);
-  }
-
-  document.getElementById('analytics-allow')?.addEventListener('click', () => decide(true));
-  document.getElementById('analytics-decline')?.addEventListener('click', () => decide(false));
+  analytics.visit(currentLanguage, document.referrer);
   document.querySelectorAll('[data-release="dmg"], [data-release="zip"]').forEach((link) => {
     link.addEventListener('click', () => analytics.download(link.dataset.release, release.version, release.build));
   });

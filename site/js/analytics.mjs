@@ -1,5 +1,5 @@
-// Explicit events only. The caller must obtain permission before enabling this
-// client; constructing it does not access storage or send network requests.
+// Explicit events only, enabled by default on the production site.
+// Constructing the client does not access storage or send network requests.
 const ENDPOINT = 'https://eu.i.posthog.com/i/v0/e/';
 const PROJECT_TOKEN = 'phc_p7Qa9Q6PK4WoNhAgPx8S6gEJf655xJoMrV6VMpzjiEGc';
 const ID_KEY = 'frazia-analytics-id';
@@ -17,9 +17,7 @@ export function referrerCategory(referrer) {
   return 'other';
 }
 
-export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = false }) {
-  let allowed = enabled;
-
+export function createAnalytics({ storage, crypto, sendBeacon, fetch }) {
   function visitorId() {
     try {
       const existing = storage.getItem(ID_KEY);
@@ -33,7 +31,6 @@ export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = 
   }
 
   function capture(event, properties) {
-    if (!allowed) return;
     const id = visitorId();
     if (!id) return;
     const payload = JSON.stringify({
@@ -60,20 +57,12 @@ export function createAnalytics({ storage, crypto, sendBeacon, fetch, enabled = 
   }
 
   return {
-    setEnabled(value) {
-      allowed = value === true;
-      if (!allowed) {
-        try { storage.removeItem(ID_KEY); storage.removeItem(DOWNLOAD_KEY); } catch { /* storage unavailable */ }
-      }
-    },
     visit(language, referrer = '') {
       capture('site_visited', { language: language === 'ru' ? 'ru' : 'en', referrer_category: referrerCategory(referrer) });
     },
     download(format, version, build) {
       if (!['dmg', 'zip'].includes(format) || !/^\d+(?:\.\d+)*$/.test(version) || !/^\d+$/.test(build)) return;
-      if (allowed) {
-        try { storage.setItem(DOWNLOAD_KEY, String(Date.now())); } catch { /* storage unavailable */ }
-      }
+      try { storage.setItem(DOWNLOAD_KEY, String(Date.now())); } catch { /* storage unavailable */ }
       capture('download_clicked', { format, release_version: `${version}-build.${build}` });
     },
   };
