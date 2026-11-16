@@ -3,10 +3,9 @@ const copy = {
   ru: { title: 'Связать посещение сайта с Frazia', ready: 'Связать посещение этого сайта с установленной Frazia для аналитики использования.', button: 'Открыть Frazia', unavailable: 'В этом браузере не найдено подходящее скачивание. Вы можете пользоваться Frazia без связывания.' },
 };
 let language = 'en';
-let id, clicked, choice;
+let id, clicked;
 try {
   if (localStorage.getItem('voicehelper-language') === 'ru') language = 'ru';
-  choice = localStorage.getItem('frazia-analytics-choice');
   id = localStorage.getItem('frazia-analytics-id');
   clicked = Number(localStorage.getItem('frazia-analytics-download'));
 } catch { /* linking remains unavailable */ }
@@ -17,7 +16,7 @@ const state = new URLSearchParams(location.hash.slice(1)).get('state');
 history.replaceState(null, '', location.pathname);
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const elapsed = Date.now() - clicked;
-const valid = choice === 'allow' && uuid.test(id || '') && uuid.test(state || '') &&
+const valid = uuid.test(id || '') && uuid.test(state || '') &&
   Number.isFinite(elapsed) && elapsed >= 0 && elapsed < 24 * 60 * 60 * 1000;
 document.getElementById('message').textContent = valid ? copy[language].ready : copy[language].unavailable;
 if (valid) {
