@@ -1,6 +1,8 @@
+import base64
 import json
 import plistlib
 import re
+import subprocess
 import unittest
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
@@ -12,7 +14,7 @@ SITE_DIR = ROOT / "site"
 PUBLIC_SITE = "https://dvoineu.github.io/Frazia/"
 PUBLIC_REPO = "https://github.com/dvoineu/VoiceHelper-downloads"
 VERSION = "1.1"
-BUILD = "10"
+BUILD = "11"
 RELEASE = f"{PUBLIC_REPO}/releases/download/v{VERSION}-build.{BUILD}/"
 
 
@@ -126,6 +128,7 @@ class FraziaSiteTests(unittest.TestCase):
             SITE_DIR / "assets" / "favicon.svg",
             SITE_DIR / "assets" / "icon-192.png",
             SITE_DIR / "assets" / "icon-512.png",
+            SITE_DIR / "appcast.xml",
         ]
         for path in required:
             self.assertTrue(path.is_file(), f"Missing required site file: {path}")
@@ -388,6 +391,44 @@ class FraziaSiteTests(unittest.TestCase):
         self.assertNotIn("v1.1-build.6", html)
         self.assertNotIn("v1.1-build.8", html)
         self.assertIn(f'Frazia <span data-release="label">{VERSION} ({BUILD})</span>', html)
+
+    def test_sparkle_appcast_is_signed_and_matches_current_release(self):
+        sparkle_ns = "{http://www.andymatuschak.org/xml-namespaces/sparkle}"
+        tree = ET.fromstring((SITE_DIR / "appcast.xml").read_text(encoding="utf-8"))
+        channel = tree.find("channel")
+        self.assertIsNotNone(channel)
+        items = channel.findall("item")
+        self.assertGreaterEqual(len(items), 1)
+        stable_items = [item for item in items if item.find(sparkle_ns + "channel") is None]
+        self.assertEqual(len(stable_items), 1)
+        item = stable_items[0]
+        self.assertEqual(item.findtext(sparkle_ns + "version"), BUILD)
+        self.assertEqual(item.findtext(sparkle_ns + "shortVersionString"), VERSION)
+        self.assertEqual(item.findtext(sparkle_ns + "minimumSystemVersion"), "13.0")
+        self.assertEqual(item.findtext(sparkle_ns + "hardwareRequirements"), "arm64")
+        enclosure = item.find("enclosure")
+        self.assertIsNotNone(enclosure)
+        expected_zip = RELEASE + f"Frazia-{VERSION}-{BUILD}-arm64.zip"
+        self.assertEqual(enclosure.attrib.get("url"), expected_zip)
+        self.assertGreater(int(enclosure.attrib.get("length", "0")), 0)
+        sig = enclosure.attrib.get(sparkle_ns + "edSignature", "")
+        self.assertEqual(len(base64.b64decode(sig, validate=True)), 64)
+
+        info_plist = ROOT / "Resources" / "Info.plist"
+        if info_plist.is_file():
+            plist = plistlib.loads(info_plist.read_bytes())
+            self.assertEqual(plist["SUFeedURL"], PUBLIC_SITE + "appcast.xml")
+            self.assertEqual(len(base64.b64decode(plist["SUPublicEDKey"], validate=True)), 32)
+            self.assertFalse(plist["SUSendProfileInfo"])
+
+        local_zip = ROOT / "build/releases" / f"Frazia-{VERSION}-{BUILD}-arm64" / f"Frazia-{VERSION}-{BUILD}-arm64.zip"
+        sign_tools = [p for p in (ROOT / ".build/artifacts").rglob("Sparkle/bin/sign_update") if "extract" not in p.parts and p.is_file()]
+        if local_zip.is_file() and sign_tools:
+            verify = subprocess.run(
+                [str(sign_tools[0]), "--account", "dev.voicehelper.VoiceHelper", "--verify", str(local_zip), sig],
+                capture_output=True, text=True, timeout=15,
+            )
+            self.assertEqual(verify.returncode, 0, verify.stderr)
 
 
 if __name__ == "__main__":
