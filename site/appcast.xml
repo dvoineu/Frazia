@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Frazia</title>
+    <link>https://dvoineu.github.io/Frazia/</link>
+    <description>Updates for Frazia</description>
+    <language>en</language>
+    <item>
+      <title>Frazia 1.1 (11)</title>
+      <link>https://github.com/dvoineu/VoiceHelper-downloads/releases/tag/v1.1-build.11</link>
+      <pubDate>Tue, 17 Nov 2026 09:00:39 GMT</pubDate>
+      <sparkle:version>11</sparkle:version>
+      <sparkle:shortVersionString>1.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+      <description><![CDATA[<h3>Frazia 1.1 (11) · macOS · Apple Silicon</h3>
+<h3>English</h3>
+<ul><li>Added built-in verified updates powered by Sparkle 2: use <strong>Check for Updates…</strong> in the menu bar or configure <strong>Settings → General → Updates</strong> (<code>Stable</code> or <code>Beta</code> channel, optional daily automatic checks, <code>SUSendProfileInfo = false</code>).</li><li>Background checks show a gentle menu bar indicator without stealing focus, and update relaunch waits until active dictation finishes.</li><li>Updates are delivered as notarized ZIP archives signed with Ed25519 (<code>SUPublicEDKey</code>) and re-verified against Frazia’s Developer ID Designated Requirement before replacing <code>Frazia.app</code> in place, preserving Accessibility, settings, Keychain keys, and downloaded Whisper models.</li></ul>
+<p>For macOS 13 or later on Apple Silicon. From <code>1.1 (11)</code> onward, Frazia can update itself directly from <strong>Check for Updates…</strong>; users updating from <code>1.1 (10)</code> or earlier need one manual replacement in Applications (drag <code>Frazia.app</code> and choose <strong>Replace</strong>) or <code>brew update &amp;&amp; brew upgrade --cask frazia</code>.</p>
+<h3>Русский</h3>
+<ul><li>Добавлены встроенные проверяемые обновления на базе Sparkle 2: выберите <strong>«Проверить обновления…»</strong> в строке меню или настройте раздел <strong>Настройки → Основное → Обновления</strong> (канал <code>Стабильный</code> или <code>Бета</code>, ежедневная автопроверка по желанию, отправка данных о системе отключена).</li><li>Фоновая проверка отображает мягкий индикатор в строке меню без перехвата фокуса, а перезапуск откладывается до завершения активной диктовки.</li><li>Обновления доставляются в нотаризованном ZIP-архиве с подписью Ed25519 и дополнительно проверяются по Developer ID Designated Requirement до замены <code>Frazia.app</code> на месте — «Универсальный доступ», настройки, ключи и скачанные модели Whisper сохраняются.</li></ul>
+<p>Для macOS 13 и новее на Apple Silicon. Начиная с версии <code>1.1 (11)</code>, Frazia обновляется автоматически через <strong>«Проверить обновления…»</strong>; пользователям версии <code>1.1 (10)</code> и старше нужно один раз заменить <code>Frazia.app</code> в «Программах» вручную (выбрав <strong>«Заменить»</strong>) или выполнить <code>brew update &amp;&amp; brew upgrade --cask frazia</code>.</p>
+<h3>Verification and limitations / Проверки и ограничения</h3>
+<p>The app and DMG were signed with Developer ID, accepted by Apple notarization and stapled. The final DMG and the app extracted from both DMG and ZIP passed signature, stapler and Gatekeeper checks, and the ZIP enclosure passed Sparkle <code>sign_update --verify</code>. Automated checks completed: 363 Swift tests (5 skipped, 0 failures), 39 Python packaging/release/site tests and the JavaScript analytics, linking and release-resolution suites. Native arm64 build, minimum declared macOS 13. A clean second-Mac installation/update and the full hardware/macOS matrix remain unverified.</p>
+<p>Приложение и DMG подписаны Developer ID, приняты сервисом notarization Apple и снабжены ticket. Финальный DMG и приложение из DMG и ZIP прошли проверки подписи, stapler и Gatekeeper, а ZIP-пакет прошёл проверку <code>sign_update --verify</code> для Sparkle. Выполнены 363 Swift-теста (5 пропущены, ошибок нет), 39 Python-тестов упаковки/релиза/сайта и JavaScript-тесты аналитики, связывания и выбора релиза. Сборка arm64, заявленный минимум — macOS 13. Установка и обновление на отдельном чистом Mac и полная матрица оборудования/macOS остаются непроверенными.</p>
+<h3>SHA-256</h3>
+<pre><code>ef83477eb63f82c2c57393fc4474107aece1d196111c0f8f36c9820488b00c0e  Frazia-1.1-11-arm64.dmg
+90612e1fb7c32578fa5fce3138ca63b15c63dab7d40adeb2921559dbcdbf204c  Frazia-1.1-11-arm64.zip</code></pre>]]></description>
+      <enclosure url="https://github.com/dvoineu/VoiceHelper-downloads/releases/download/v1.1-build.11/Frazia-1.1-11-arm64.zip" length="6006309" type="application/octet-stream" sparkle:edSignature="JnCcX2iU8kuKdBJWrGH7OGaJ5pR+MKV4Ld3pO77n0eLoz8MQUbjiQMWyNSBl253pR08kLQd6YoiWJGBqzt6cDA==" />
+    </item>
+  </channel>
+</rss>
