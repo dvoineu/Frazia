@@ -406,6 +406,14 @@ class FraziaSiteTests(unittest.TestCase):
         self.assertEqual(item.findtext(sparkle_ns + "shortVersionString"), VERSION)
         self.assertEqual(item.findtext(sparkle_ns + "minimumSystemVersion"), "15.0")
         self.assertEqual(item.findtext(sparkle_ns + "hardwareRequirements"), "arm64")
+        xml_lang = "{http://www.w3.org/XML/1998/namespace}lang"
+        descriptions = {el.attrib.get(xml_lang): (el.text or "") for el in item.findall("description")}
+        self.assertEqual(set(descriptions.keys()), {"en", "ru"})
+        self.assertTrue(descriptions["en"].strip())
+        self.assertTrue(descriptions["ru"].strip())
+        for forbidden in ("Verification", "Проверки", "SHA-256", "Swift tests", "sign_update", "frazia-llama-server", "brew upgrade"):
+            self.assertNotIn(forbidden, descriptions["en"])
+            self.assertNotIn(forbidden, descriptions["ru"])
         enclosure = item.find("enclosure")
         self.assertIsNotNone(enclosure)
         expected_zip = RELEASE + f"Frazia-{VERSION}-{BUILD}-arm64.zip"
