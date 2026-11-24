@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = ROOT / "site"
 PUBLIC_SITE = "https://dvoineu.github.io/Frazia/"
 PUBLIC_REPO = "https://github.com/dvoineu/VoiceHelper-downloads"
-VERSION = "1.1"
-BUILD = "11"
+VERSION = "1.2"
+BUILD = "12"
 RELEASE = f"{PUBLIC_REPO}/releases/download/v{VERSION}-build.{BUILD}/"
 
 
@@ -404,7 +404,7 @@ class FraziaSiteTests(unittest.TestCase):
         item = stable_items[0]
         self.assertEqual(item.findtext(sparkle_ns + "version"), BUILD)
         self.assertEqual(item.findtext(sparkle_ns + "shortVersionString"), VERSION)
-        self.assertEqual(item.findtext(sparkle_ns + "minimumSystemVersion"), "13.0")
+        self.assertEqual(item.findtext(sparkle_ns + "minimumSystemVersion"), "15.0")
         self.assertEqual(item.findtext(sparkle_ns + "hardwareRequirements"), "arm64")
         enclosure = item.find("enclosure")
         self.assertIsNotNone(enclosure)
