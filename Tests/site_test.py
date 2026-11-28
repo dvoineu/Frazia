@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = ROOT / "site"
 PUBLIC_SITE = "https://dvoineu.github.io/Frazia/"
 PUBLIC_REPO = "https://github.com/dvoineu/VoiceHelper-downloads"
-VERSION = "1.2.1"
-BUILD = "13"
+VERSION = "1.2.2"
+BUILD = "14"
 RELEASE = f"{PUBLIC_REPO}/releases/download/v{VERSION}-build.{BUILD}/"
 
 
