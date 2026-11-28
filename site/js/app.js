@@ -5,7 +5,7 @@ import { RELEASE_CACHE_TTL_MS, parseRelease, shouldAcceptRelease } from './relea
 const STORAGE_KEY = 'voicehelper-language';
 const REPO = 'dvoineu/VoiceHelper-downloads';
 const RELEASE_CACHE_KEY = 'frazia-latest-release';
-const release = { version: '1.2.1', build: '13' };
+const release = { version: '1.2.2', build: '14' };
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 let currentLanguage = 'en';
